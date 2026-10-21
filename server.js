@@ -4,7 +4,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { getCatalogSummary, getJobById, listJobs } from "./server/catalog.js";
 import { exportCandidatesCsv, getCandidateById, listCandidateSummaries } from "./server/candidates.js";
-import { createRecommendationCache } from "./server/recommendations.js";
+import { getRecommendations } from "./server/recommendations.js";
 
 const projectRoot = path.dirname(fileURLToPath(import.meta.url));
 const contentTypes = {
@@ -70,7 +70,6 @@ async function serveBuiltAsset(response, requestPath) {
 
 export async function createApplicationServer({ dev = false } = {}) {
   let vite;
-  const getRecommendations = createRecommendationCache();
 
   function handleApi(response, pathname, searchParams) {
     if (pathname === "/api/health") {
