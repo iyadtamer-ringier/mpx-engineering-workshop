@@ -1,8 +1,13 @@
 import { primaryJobs, partnerJobs } from "./seed-data.js";
 
 export function listJobs({ query = "", category = "All", location = "All" } = {}) {
-  // Workshop baseline: the same role can appear in both sources.
-  const jobs = [...primaryJobs, ...partnerJobs];
+  // Direct listings come first; keep the first record for each canonical role.
+  const seenRoles = new Set();
+  const jobs = [...primaryJobs, ...partnerJobs].filter((job) => {
+    if (seenRoles.has(job.canonicalId)) return false;
+    seenRoles.add(job.canonicalId);
+    return true;
+  });
   const normalizedQuery = query.trim().toLowerCase();
 
   return jobs.filter((job) => {
